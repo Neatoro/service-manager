@@ -1,0 +1,19 @@
+{
+  "name": "service-manager",
+  "version": "1.0.0",
+  "description": "The single service manager for kubernetes based service instances",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Neatoro/service-manager.git"
+  },
+  "author": "Moritz Schramm",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Neatoro/service-manager/issues"
+  },
+  "homepage": "https://github.com/Neatoro/service-manager#readme"
+}
