@@ -4,7 +4,8 @@
   "description": "The single service manager for kubernetes based service instances",
   "main": "dist/index.js",
   "scripts": {
-    "start": "node .",
+    "start": "npm run start:buildkit && node .",
+    "start:buildkit": "buildkitd > /dev/null &",
     "build": "tsc"
   },
   "repository": {
