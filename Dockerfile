@@ -1,6 +1,6 @@
 FROM node:lts-alpine as build
 
-COPY package*.json .
+COPY package*.json ./
 RUN npm ci
 
 COPY . .
@@ -17,7 +17,7 @@ ENV PATH=${PATH}:/build/bin
 
 WORKDIR /app
 
-COPY package*.json .
+COPY package*.json ./
 RUN npm ci --production
 
 COPY --from=build dist/ .

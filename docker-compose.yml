@@ -1,0 +1,15 @@
+version: '3.7'
+
+services:
+  registry:
+    image: registry:2
+    ports:
+      - 5000:5000
+
+  service-manager:
+    build: .
+    image: service-manager
+    ports:
+      - 8080:8080
+    environment:
+      - PORT=8080
