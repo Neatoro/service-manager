@@ -21,5 +21,6 @@ COPY package*.json ./
 RUN npm ci --production
 
 COPY --from=build dist/ .
+COPY --from=build docker/ ./docker
 
 CMD [ "npm", "start" ]

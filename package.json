@@ -4,7 +4,7 @@
   "description": "The single service manager for kubernetes based service instances",
   "main": "dist/index.js",
   "scripts": {
-    "start": "npm run start:buildkit && node .",
+    "start": "node .",
     "start:buildkit": "buildkitd > /dev/null &",
     "build": "tsc"
   },
@@ -23,11 +23,14 @@
     "@nestjs/config": "0.6.1",
     "@nestjs/core": "7.5.5",
     "@nestjs/platform-express": "7.5.5",
+    "@nestjs/typeorm": "^7.1.5",
     "class-transformer": "0.3.1",
     "class-validator": "0.12.2",
     "helmet": "4.2.0",
+    "mysql": "^2.18.1",
     "reflect-metadata": "0.1.13",
-    "rxjs": "6.6.3"
+    "rxjs": "6.6.3",
+    "typeorm": "^0.2.29"
   },
   "devDependencies": {
     "@types/node": "14.14.10",
