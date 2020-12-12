@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { exec } from 'child_process';
 import { promises as fs } from 'fs';
@@ -16,7 +17,14 @@ const images = {
 @Injectable()
 export class ServiceService {
 
-  constructor(@InjectRepository(Service) private readonly serviceRepository: Repository<Service>) {}
+  private registry: string;
+
+  constructor(
+    @InjectRepository(Service) private readonly serviceRepository: Repository<Service>,
+    configService: ConfigService
+  ) {
+    this.registry = configService.get('REGISTRY');
+  }
 
   async create({ name, manifest }) {
     const result = await this.serviceRepository.save({
@@ -41,7 +49,7 @@ export class ServiceService {
 
   getBuildCommand({ tempDir, type, name }): string {
     const image = images[type];
-    return `buildctl build --frontend=dockerfile.v0 --local context=${tempDir} --local dockerfile=${image} --output type=image,name=registry:5000/${name},push=true,registry.insecure=true`;
+    return `buildctl build --frontend=dockerfile.v0 --local context=${tempDir} --local dockerfile=${image} --output type=image,name=${this.registry}/${name},push=true,registry.insecure=true`;
   }
 
 };

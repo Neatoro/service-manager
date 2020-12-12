@@ -33,3 +33,4 @@ services:
     environment:
       - PORT=8080
       - BUILDKIT_HOST=tcp://buildkitd:3242
+      - REGISTRY=registry:5000
