@@ -77,7 +77,7 @@ program
     });
 
     executeCommandSync({
-      message: 'Apply ${type} configuration',
+      message: `Apply ${type} configuration`,
       command: `kubectl apply -f kubernetes/${type}`
     });
 
