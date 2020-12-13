@@ -2,3 +2,5 @@ node_modules/
 .vscode
 dist/
 .env
+kubernetes/config.yml
+kubernetes/gen

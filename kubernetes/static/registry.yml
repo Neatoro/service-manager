@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service-manager-registry-deployment
+  labels:
+    app: service-manager-registry
+spec:
+  selector:
+    matchLabels:
+      app: service-manager-registry
+  template:
+    metadata:
+      labels:
+        app: service-manager-registry
+    spec:
+      restartPolicy: Always
+      containers:
+        - name: registry
+          image: registry:2
+          ports:
+            - containerPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-manager-registry-service
+spec:
+  ports:
+  - port: 5000
+    targetPort: 5000
+  selector:
+    app: service-manager-registry

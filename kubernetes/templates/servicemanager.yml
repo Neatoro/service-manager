@@ -1,0 +1,61 @@
+#@ load("@ytt:data", "data")
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service-manager-deployment
+  labels:
+    app: service-manager
+spec:
+  selector:
+    matchLabels:
+      app: service-manager
+  template:
+    metadata:
+      labels:
+        app: service-manager
+    spec:
+      restartPolicy: Always
+      containers:
+        - name: service-manager
+          image: #@ data.values.registry + "/service-manager"
+          ports:
+            - containerPort: 8080
+          env:
+            - name: port
+              value: '8080'
+            - name: MYSQL_DATABASE
+              value: servicemanager
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: database-secret
+                  key: rootpassword
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: database-secret
+                  key: password
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: database-secret
+                  key: user
+            - name: MYSQL_HOST
+              value: service-manager-database-service
+            - name: MYSQL_PORT
+              value: '3306'
+            - name: BUILDKIT_HOST
+              value: tcp://service-manager-buildkitd-service:3242
+            - name: REGISTRY
+              value: service-manager-registry-service:5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-manager-service
+spec:
+  ports:
+  - port: 8080
+    targetPort: 8080
+  selector:
+    app: service-manager
