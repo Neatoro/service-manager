@@ -4,8 +4,8 @@
   "description": "The single service manager for kubernetes based service instances",
   "main": "dist/index.js",
   "scripts": {
-    "start": "node .",
-    "start:buildkit": "buildkitd > /dev/null &",
+    "setup:kube": "kubectl config set-cluster default --server=$KUBE_HOST && kubectl config set-credentials service-manager-access --token $KUBE_ACCESS_TOKEN",
+    "start": "npm run setup:kube && node .",
     "build": "tsc",
     "kub:gen": "ytt -f kubernetes/templates -f kubernetes/config.yml --output-files kubernetes/gen",
     "build:image": "docker build -t service-manager ."

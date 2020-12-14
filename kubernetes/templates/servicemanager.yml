@@ -48,6 +48,13 @@ spec:
               value: tcp://service-manager-buildkitd-service:3242
             - name: REGISTRY
               value: service-manager-registry-service:5000
+            - name: KUBE_HOST
+              value: #@ data.values.kube
+            - name: KUBE_ACCESS_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: #@ data.values.kube_access_secret
+                  key: token
 ---
 apiVersion: v1
 kind: Service

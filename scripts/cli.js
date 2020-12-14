@@ -66,14 +66,24 @@ program
       command: 'docker network rm service-manager-build'
     });
 
-    const ip = executeCommandSync({
+    const registryIp = executeCommandSync({
       message: 'Getting Registry Cluster IP',
       command: `kubectl get service service-manager-registry-service -o jsonpath={.spec.clusterIP}`
     });
 
+    const kubeIp = executeCommandSync({
+      message: 'Getting Kube Cluster IP',
+      command: `kubectl get svc kubernetes -o jsonpath={.spec.clusterIP}`
+    });
+
+    const accessTokenName = executeCommandSync({
+      message: 'Getting Access Token Secret Name',
+      command: `kubectl get sa service-manager-access -o jsonpath={.secrets[0].name}`
+    });
+
     executeCommandSync({
       message: 'Generating Kubernets Config',
-      command: `npm run kub:gen -- -v registry=${ip}:5000`
+      command: `npm run kub:gen -- -v registry=${registryIp}:5000 -v kube=${kubeIp} -v kube_access_secret=${accessTokenName}`
     });
 
     executeCommandSync({

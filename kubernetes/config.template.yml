@@ -1,3 +1,5 @@
 #@data/values
 ---
 registry: registry.local
+kube: kubernetes.docker.internal
+kube_access_secret: anyname
