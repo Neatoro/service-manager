@@ -4,8 +4,7 @@
   "description": "The single service manager for kubernetes based service instances",
   "main": "dist/index.js",
   "scripts": {
-    "setup:kube": "kubectl config set-cluster default --server=$KUBE_HOST && kubectl config set-credentials service-manager-access --token $KUBE_ACCESS_TOKEN",
-    "start": "npm run setup:kube && node .",
+    "start": "node .",
     "build": "tsc",
     "kub:gen": "ytt -f kubernetes/templates -f kubernetes/config.yml --output-files kubernetes/gen",
     "build:image": "docker build -t service-manager ."
@@ -24,6 +23,7 @@
   },
   "homepage": "https://github.com/Neatoro/service-manager#readme",
   "dependencies": {
+    "@kubernetes/client-node": "0.13.0",
     "@nestjs/common": "7.5.5",
     "@nestjs/config": "0.6.1",
     "@nestjs/core": "7.5.5",
