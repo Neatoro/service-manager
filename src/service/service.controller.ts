@@ -1,4 +1,4 @@
-import { Controller, Post, UploadedFile, UseInterceptors } from "@nestjs/common";
+import { Controller, Get, Post, UploadedFile, UseInterceptors } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { ServiceService } from "./service.service";
 
@@ -23,6 +23,11 @@ export class ServiceController {
 
     this.serviceService.buildImage({ service, manifest, data });
     return service;
+  }
+
+  @Get()
+  catalog() {
+    return this.serviceService.catalog();
   }
 
 };

@@ -34,6 +34,10 @@ export class ServiceService {
     return result;
   }
 
+  async catalog() {
+    return await this.serviceRepository.find();
+  }
+
   async getServiceByName({ name }) {
     const result = await this.serviceRepository.find({ name });
     return result[0];
