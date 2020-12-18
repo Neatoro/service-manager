@@ -34,6 +34,11 @@ export class ServiceService {
     return result;
   }
 
+  async update({ service, manifest }) {
+    service.manifest = JSON.stringify(manifest);
+    return await this.serviceRepository.save(service);
+  }
+
   async catalog() {
     return await this.serviceRepository.find();
   }

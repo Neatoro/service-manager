@@ -19,6 +19,8 @@ export class ServiceController {
     let service = await this.serviceService.getServiceByName({ name: manifest.name });
     if (!service) {
       service = await this.serviceService.create({ name: manifest.name, manifest });
+    } else {
+      service = await this.serviceService.update({ service, manifest });
     }
 
     this.serviceService.buildImage({ service, manifest, data });
