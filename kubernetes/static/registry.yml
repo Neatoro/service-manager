@@ -1,3 +1,33 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: service-manager-registry-pv
+  labels:
+    type: local
+    app: service-manager-registry
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: "/mnt/servicemanager/registry/data"
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: service-manager-registry-pvc
+  labels:
+    app: service-manager-registry
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 5Gi
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -14,9 +44,16 @@ spec:
         app: service-manager-registry
     spec:
       restartPolicy: Always
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: service-manager-registry-pvc
       containers:
         - name: registry
           image: registry:2
+          volumeMounts:
+            - mountPath: /var/lib/registry
+              name: data
           ports:
             - containerPort: 5000
 ---
