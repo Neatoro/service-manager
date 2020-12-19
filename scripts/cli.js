@@ -98,7 +98,7 @@ program
 
     executeCommandSync({
       message: 'Apply gen configuration',
-      command: `kubectl apply -f kubernetes/gen`
+      command: `kubectl replace --force -f kubernetes/gen`
     });
   });
 
