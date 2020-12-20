@@ -1,18 +1,6 @@
 version: '3.7'
 
 services:
-  registry:
-    image: registry:2
-    expose:
-      - 5000
-
-  buildkitd:
-    image: moby/buildkit:rootless
-    privileged: true
-    command: "--addr tcp://0.0.0.0:3242"
-    expose:
-      - 3242
-
   db:
     image: mysql
     command: "--default-authentication-plugin=mysql_native_password"
@@ -21,16 +9,18 @@ services:
       - 3306
 
   service-manager:
-    build: .
+    build:
+      context: .
+      args:
+        NODE_ENV: dev
     image: service-manager
+    privileged: true
     ports:
       - 8080:8080
     env_file: .env
     links:
       - db
-      - buildkitd
-      - registry
     environment:
       - PORT=8080
-      - BUILDKIT_HOST=tcp://buildkitd:3242
-      - REGISTRY=registry:5000
+      - KUBE_HOST=kubernetes.docker.internal:6443
+      - NODE_ENV=dev

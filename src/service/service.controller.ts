@@ -1,11 +1,20 @@
-import { Controller, Get, Post, UploadedFile, UseInterceptors } from "@nestjs/common";
-import { FileInterceptor } from "@nestjs/platform-express";
-import { ServiceService } from "./service.service";
+import { Controller, Get, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { BuilderServiceFactory } from '../builder/builder.factory';
+import { BuilderService } from '../builder/builder.interface';
+import { ServiceService } from './service.service';
 
 @Controller('/api/service')
 export class ServiceController {
 
-  constructor(private readonly serviceService: ServiceService) {}
+  private builderService: BuilderService;
+
+  constructor(
+    private readonly serviceService: ServiceService,
+    builderFactory: BuilderServiceFactory
+  ) {
+    this.builderService = builderFactory.getService();
+  }
 
   @Post()
   @UseInterceptors(FileInterceptor('file'))
@@ -23,7 +32,7 @@ export class ServiceController {
       service = await this.serviceService.update({ service, manifest });
     }
 
-    this.serviceService.buildImage({ service, manifest, data });
+    this.builderService.buildImage({ service, manifest, data });
     return service;
   }
 
