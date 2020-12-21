@@ -83,6 +83,7 @@ export class KubeService {
       name: containerManifest.name,
       image: containerManifest.image,
       ports: containerManifest.ports.map((port) => ({ containerPort: Number(port) })),
+      args: containerManifest.args,
       env: Object
         .keys(containerManifest.env)
         .map((key) => this.transformEnvVariableFromManifest({ service, name: key, manifest: containerManifest.env[key] }))
