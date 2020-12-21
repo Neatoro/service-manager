@@ -18,13 +18,17 @@ export class RemoteBuilder extends BuilderService {
     return RemoteBuilder.instance;
   }
 
-  getBuildCommand({ tempDir, type, name }): string {
+  getBuildCommand({ tempDir, type, manifest }): string {
     const image = this.imageTypes[type];
-    return `buildctl build --frontend=dockerfile.v0 --local context=${tempDir} --local dockerfile=${image} --output type=image,name=${this.getImageName(name)},push=true,registry.insecure=true`;
+    return `buildctl build --frontend=dockerfile.v0 --local context=${tempDir} --local dockerfile=${image} --opt build-arg:main=${manifest.main} --output type=image,name=${this.getImageName(manifest.name)},push=true,registry.insecure=true`;
   }
 
   getImageName(service) {
     return `${this.registry}/${service}`;
+  }
+
+  getImagePollPolicy() {
+    return 'Always';
   }
 
 };

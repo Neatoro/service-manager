@@ -18,11 +18,19 @@ export abstract class BuilderService {
     await fs.mkdir(tempDir, { recursive: true });
     await fs.writeFile(resolvePath(tempDir, 'app.zip'), data);
 
-    await runCommand(this.getBuildCommand({ tempDir, type: manifest.type, name: service.name }));
+    await runCommand(this.getBuildCommand({ tempDir, type: manifest.type, manifest }));
   }
 
-  abstract getBuildCommand({ tempDir, type, name });
+  getStartParameters(manifest) {
+    if (manifest.type === 'node') {
+      return ['node', manifest.main];
+    }
+  }
 
-  abstract getImageName({ service });
+  abstract getImagePollPolicy();
+
+  abstract getBuildCommand({ tempDir, type, manifest });
+
+  abstract getImageName(service);
 
 };

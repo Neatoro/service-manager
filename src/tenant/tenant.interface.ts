@@ -9,3 +9,9 @@ export class CreateTenantDTO {
   baseHost: string;
 
 };
+
+export class CreateServiceInstanceDTO {
+
+  service: string;
+
+};

@@ -4,7 +4,7 @@
   "description": "The single service manager for kubernetes based service instances",
   "main": "dist/index.js",
   "scripts": {
-    "start": "node .",
+    "start": "node --inspect .",
     "build": "tsc",
     "kub:gen": "ytt -f kubernetes/templates -f kubernetes/config.yml --output-files kubernetes/gen",
     "build:image": "docker build -t service-manager ."
@@ -33,6 +33,7 @@
     "class-validator": "0.12.2",
     "helmet": "4.2.0",
     "mysql": "2.18.1",
+    "randexp": "0.5.3",
     "reflect-metadata": "0.1.13",
     "rxjs": "6.6.3",
     "typeorm": "0.2.29"

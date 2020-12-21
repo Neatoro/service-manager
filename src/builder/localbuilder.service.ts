@@ -15,13 +15,17 @@ export class LocalBuilder extends BuilderService {
     return LocalBuilder.instance;
   }
 
-  getBuildCommand({ tempDir, type, name }) {
+  getBuildCommand({ tempDir, type, manifest }) {
     const image = this.imageTypes[type];
-    return `docker build -t ${this.getImageName(name)} -f ${image}/Dockerfile ${tempDir}`;
+    return `docker build -t ${this.getImageName(manifest.name)} --build-arg main=${manifest.main} -f ${image}/Dockerfile ${tempDir}`;
   }
 
   getImageName(service) {
     return service;
+  }
+
+  getImagePollPolicy() {
+    return 'Never';
   }
 
 };

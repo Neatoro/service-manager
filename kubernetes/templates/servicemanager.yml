@@ -47,7 +47,7 @@ spec:
             - name: BUILDKIT_HOST
               value: tcp://service-manager-buildkitd-service:3242
             - name: REGISTRY
-              value: service-manager-registry-service:5000
+              value: #@ data.values.registry
             - name: KUBE_HOST
               value: #@ data.values.kube
             - name: KUBE_ACCESS_TOKEN
