@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Service } from '../service/service.entity';
 import { ServiceModule } from '../service/service.module';
+import { SubscriptionModule } from '../subscription/subscription.module';
 import { Tenant } from '../tenant/tenant.entity';
 import { TenantModule } from '../tenant/tenant.module';
 
@@ -28,7 +29,8 @@ import { TenantModule } from '../tenant/tenant.module';
       }
     }),
     ServiceModule,
-    TenantModule
+    TenantModule,
+    SubscriptionModule
   ]
 })
 export class AppModule {};

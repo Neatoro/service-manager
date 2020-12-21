@@ -1,5 +1,5 @@
-import { Body, Controller, Param, Post } from '@nestjs/common';
-import { CreateServiceInstanceDTO, CreateTenantDTO } from './tenant.interface';
+import { Body, Controller, Delete, Post } from '@nestjs/common';
+import { CreateTenantDTO, DeleteTenantDTO } from './tenant.interface';
 import { TenantService } from './tenant.service';
 
 @Controller('/api/tenant')
@@ -12,9 +12,9 @@ export class TenantController {
     return this.tenantService.create(dto);
   }
 
-  @Post('/:tenant')
-  createServiceInstance(@Param('tenant') tenant: string, @Body() dto: CreateServiceInstanceDTO) {
-    return this.tenantService.createServiceInstance(tenant, dto);
+  @Delete()
+  delete(@Body() dto: DeleteTenantDTO) {
+    return this.tenantService.delete(dto);
   }
 
 };

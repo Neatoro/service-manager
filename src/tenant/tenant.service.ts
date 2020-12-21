@@ -1,18 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import RandExp from 'randexp';
 import { Connection, QueryRunner, Repository } from 'typeorm';
 import { KubeService } from '../kube/kube.service';
 import { Service } from '../service/service.entity';
 import { Tenant } from './tenant.entity';
-import { CreateServiceInstanceDTO, CreateTenantDTO } from './tenant.interface';
+import { CreateTenantDTO, DeleteTenantDTO } from './tenant.interface';
 
 @Injectable()
 export class TenantService {
 
   constructor(
     @InjectRepository(Tenant) private readonly tenantRepository: Repository<Tenant>,
-    @InjectRepository(Service) private readonly serviceRepository: Repository<Service>,
     private readonly connection: Connection,
     private readonly kubeService: KubeService
   ) {}
@@ -40,38 +38,32 @@ export class TenantService {
     }
   }
 
-  async createServiceInstance(tenant: string, dto: CreateServiceInstanceDTO) {
-    const fullService: Service = await this.serviceRepository.findOne({ name: dto.service });
-    const serviceManifest = JSON.parse(fullService.manifest);
-
-    if (serviceManifest.secrets) {
-      const secretNames = Object.keys(serviceManifest.secrets);
-      for (const secretName of secretNames) {
-        await this.kubeService.createSecret({
-          tenant,
-          service: fullService.name,
-          name: secretName,
-          data: this.generateSecretData(serviceManifest.secrets[secretName])
-        });
-      }
+  async delete(dto: DeleteTenantDTO) {
+    const tenant: Tenant = await this.tenantRepository.findOne(dto.id);
+    if (!tenant) {
+      throw new NotFoundException(dto.id, 'tenant');
     }
 
-    return await this.kubeService.createServiceDeployment({ tenant, manifest: serviceManifest });
+    const queryRunner: QueryRunner = this.connection.createQueryRunner();
+
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      await queryRunner.manager.delete(Tenant, { id: dto.id });
+      await this.kubeService.deleteNamespace(tenant.name);
+
+      await queryRunner.commitTransaction();
+      await queryRunner.release();
+    } catch (e) {
+      await queryRunner.rollbackTransaction();
+      await queryRunner.release();
+      throw e;
+    }
   }
 
-  generateSecretData(data) {
-    const keys = Object.keys(data);
-    const generatedData = {};
-    for (const key of keys) {
-      const config = data[key];
-      if (config.generated) {
-        const randExp = new RandExp(config.generated);
-        generatedData[key] = randExp.gen();
-      } else if (config.static) {
-        generatedData[key] = config.static;
-      }
-    }
-    return generatedData;
+  getTenantById(id): Promise<Tenant> {
+    return this.tenantRepository.findOne(id);
   }
 
 };

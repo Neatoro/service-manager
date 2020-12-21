@@ -37,6 +37,10 @@ export class KubeService {
     }
   }
 
+  async deleteNamespace(name) {
+    await this.client.deleteNamespace(name);
+  }
+
   async createSecret({ tenant, service, name, data }) {
     const fullname = `${service}-${name}-secret`;
 

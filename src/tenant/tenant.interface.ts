@@ -10,8 +10,9 @@ export class CreateTenantDTO {
 
 };
 
-export class CreateServiceInstanceDTO {
+export class DeleteTenantDTO {
 
-  service: string;
+  @IsNotEmpty()
+  id: string;
 
-};
+}
