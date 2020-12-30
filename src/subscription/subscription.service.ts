@@ -31,7 +31,8 @@ export class SubscriptionService {
       await this.createServiceSecrets({ tenant, service, secrets: manifest.secrets });
     }
 
-    return await this.kubeService.createServiceDeployment({ tenant: tenant.name, manifest });
+    await this.kubeService.createServiceDeployment({ tenant: tenant.name, manifest });
+    await this.kubeService.createService({ tenant, manifest });
   }
 
   private async createServiceSecrets({ tenant, service, secrets }: { tenant: Tenant, service: Service, secrets: Object }) {

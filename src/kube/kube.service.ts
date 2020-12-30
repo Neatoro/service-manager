@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { BuilderServiceFactory } from '../builder/builder.factory';
 import { BuilderService } from '../builder/builder.interface';
+import { Tenant } from '../tenant/tenant.entity';
 
 @Injectable()
 export class KubeService {
@@ -156,6 +157,20 @@ export class KubeService {
         }
       }
     })
+  }
+
+  async createService({ tenant, manifest }: { tenant: Tenant, manifest: any }) {
+    await this.client.createNamespacedService(tenant.name, {
+      metadata: {
+        name: `${manifest.name}-service`
+      },
+      spec: {
+        ports: manifest.ports.map((port) => ({ port, targetPort: port })),
+        selector: {
+          app: manifest.name
+        }
+      }
+    });
   }
 
 };
